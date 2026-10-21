@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>上海4天3晚旅行手册</title>
+    <script type="text/javascript">
+        window._AMapSecurityConfig = {
+            securityJsCode: '9549efcc92b60ea267b86d40e15e78e8',
+        }
+    </script>
+    <script src="https://webapi.amap.com/maps?v=2.0&key=7ad49e53d49f134da290df0cd85e5a5e"></script>
+    <style>
+        :root {
+            --bg: #FDFBF7; --card: #FFF9EE; --inner: #FFFDF9;
+            --text: #4A4238; --sub: #8E8578; --border: #F0E6D2;
+            --primary: #E8A35E; --highlight: #FF6B35; --shadow: 0 4px 16px rgba(200,180,150,0.15);
+            --map: #EFE8DA; --tag: #F5E9D3;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #1A1A1A; --card: #262523; --inner: #1F1E1C;
+                --text: #E6E1D8; --sub: #A39D93; --border: #3D3A36;
+                --primary: #D9A05B; --shadow: 0 4px 16px rgba(0,0,0,0.4);
+                --map: #2C2A26; --tag: #3D3830;
+            }
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding-bottom: 40px; }
+        .container { max-width: 600px; margin: 0 auto; padding: 16px; }
+        
+        /* 倒计时 */
+        .countdown { background: linear-gradient(135deg, #F7D7A8, #E8A35E); color: #4A3B2A; border-radius: 16px; padding: 20px; text-align: center; box-shadow: 0 8px 24px rgba(232,163,94,0.25); margin-bottom: 24px; }
+        .countdown-title { font-size: 14px; font-weight: bold; margin-bottom: 8px; }
+        .countdown-timer { font-size: 32px; font-weight: 900; letter-spacing: 1px; }
+        .countdown-sub { font-size: 12px; opacity: 0.8; margin-top: 8px; }
+
+        /* 标题和卡片 */
+        .sec-title { font-size: 18px; font-weight: bold; margin: 24px 0 12px; display: flex; align-items: center; gap: 8px; }
+        .sec-title::before { content: ''; width: 4px; height: 18px; background: var(--primary); border-radius: 2px; }
+        .card { background: var(--card); border-radius: 16px; padding: 16px; box-shadow: var(--shadow); margin-bottom: 16px; border: 1px solid var(--border); }
+
+        /* 订单 */
+        .row { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding: 12px 0; font-size: 14px; }
+        .row:last-child { border-bottom: none; }
+        .label { color: var(--sub); font-weight: bold; width: 60px; flex-shrink: 0; }
+        .val { text-align: right; display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+        .btn { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; text-decoration: none; }
+        .btn-damai { background: var(--highlight); color: white; }
+        .btn-flight { background: var(--inner); color: var(--text); border: 1px solid var(--border); }
+
+        /* 地图 */
+        .map { width: 100%; height: 250px; border-radius: 12px; overflow: hidden; background: var(--map); margin-bottom: 16px; }
+
+        /* 行程 */
+        .day-card { margin-bottom: 24px; }
+        .day-head { display: flex; justify-content: space-between; padding: 14px 16px; background: var(--card); border-radius: 16px 16px 0 0; border-bottom: 1px solid var(--border); cursor: pointer; }
+        .day-head h3 { font-size: 16px; }
+        .day-head .date { font-size: 12px; color: var(--primary); font-weight: bold; }
+        .day-body { padding: 16px; background: var(--card); border-radius: 0 0 16px 16px; }
+        .timeline { position: relative; padding-left: 20px; }
+        .timeline::before { content: ''; position: absolute; left: 4px; top: 6px; bottom: 0; width: 2px; background: var(--border); }
+        .item { position: relative; margin-bottom: 24px; }
+        .item:last-child { margin-bottom: 0; }
+        .item::before { content: ''; position: absolute; left: -20px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--primary); border: 2px solid var(--card); box-shadow: 0 0 0 2px var(--primary); }
+        .time { font-size: 13px; color: var(--primary); font-weight: bold; display: block; margin-bottom: 4px; }
+        .content { font-size: 14px; }
+        
+        /* 推荐和图片 */
+        .rec { margin-top: 12px; padding: 12px; background: var(--inner); border-radius: 10px; border: 1px solid var(--border); font-size: 13px; }
+        .rec-title { color: var(--primary); font-weight: bold; margin-bottom: 6px; }
+        .rec a { color: var(--primary); text-decoration: none; background: var(--tag); padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+        .img-box { width: 100%; height: 100px; border-radius: 8px; margin-bottom: 10px; background: var(--tag); display: flex; align-items: center; justify-content: center; border: 1px dashed var(--primary); overflow: hidden; position: relative; }
+        .img-box svg { width: 60%; height: 80%; opacity: 0.8; }
+        .img-box span { position: absolute; bottom: 4px; right: 8px; font-size: 10px; color: var(--sub); opacity: 0.6; }
+
+        .nav-btn { color: var(--primary); text-decoration: none; font-weight: bold; display: inline-block; margin-top: 6px; background: var(--tag); padding: 4px 10px; border-radius: 12px; font-size: 12px; }
+        .star { color: var(--highlight); }
+        .tag { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; background: var(--tag); color: var(--primary); }
+        
+        /* 待办和贴士 */
+        .todo { list-style: none; }
+        .todo li { padding: 12px 0; border-bottom: 1px dashed var(--border); font-size: 14px; }
+        .todo li::before { content: '🍡 '; margin-right: 6px; }
+        .tips p { margin-bottom: 10px; font-size: 14px; }
+        .tips p::before { content: '💡 '; margin-right: 6px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 倒计时 -->
+        <div class="countdown">
+            <div class="countdown-title">距离出发：10/29 13:05 深圳宝安T3</div>
+            <div class="countdown-timer" id="timer">计算中...</div>
+            <div class="countdown-sub">所有时间均为北京时间 (UTC+8)</div>
+        </div>
+
+        <div class="sec-title">行程总览</div>
+        <div class="map" id="overviewMap"></div>
+
+        <div class="sec-title">已确认订单</div>
+        <div class="card">
+            <div class="row">
+                <span class="label">去程 ✈️</span>
+                <div class="val">
+                    <span>10/29 13:05 深圳T3 → 15:20 上海浦东T1<br><small>东航 MU5342</small></span>
+                    <a href="https://m.ceair.com/" target="_blank" class="btn btn-flight">东方航空</a>
+                </div>
+            </div>
+            <div class="row">
+                <span class="label">回程 ✈️</span>
+                <div class="val">
+                    <span>11/1 20:30 上海虹桥T2 → 23:10 深圳T3<br><small>东航 MU5357</small></span>
+                    <a href="https://m.ceair.com/" target="_blank" class="btn btn-flight">东方航空</a>
+                </div>
+            </div>
+            <div class="row">
+                <span class="label">酒店1 🏨</span>
+                <div class="val">
+                    <span>云和夜泊酒店 (10/29-10/31)<br><small>川沙新镇连民村179号</small></span>
+                </div>
+            </div>
+            <div class="row">
+                <span class="label">酒店2 🏨</span>
+                <div class="val">
+                    <span>建国璞隐酒店(外滩) (10/31-11/1)<br><small>黄浦区金陵东路531号</small></span>
+                </div>
+            </div>
+            <div class="row">
+                <span class="label">演唱会 🎫</span>
+                <div class="val">
+                    <span>10/30 18:30 放肆快乐Live<br><small>前滩体育公园</small></span>
+                    <a href="https://m.damai.cn/damai/order/list.html" target="_blank" class="btn btn-damai">🎟️ 打开大麦订单</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="sec-title">逐日行程</div>
+        
+        <div class="day-card">
+            <div class="day-head" onclick="toggleMap('map-d1')"><h3>D1 抵达浦东，奥莱逛吃</h3><span class="date">10/29 周四</span></div>
+            <div class="map" id="map-d1" style="display:none; border-radius:0; margin-bottom:0;"></div>
+            <div class="day-body">
+                <div class="timeline">
+                    <div class="item"><span class="time">15:20</span><div class="content">落地浦东机场 T1 <span class="tag">取行李</span></div></div>
+                    <div class="item"><span class="time">16:30</span><div class="content">前往酒店办理入住 <a href="https://uri.amap.com/marker?position=121.736,31.176&name=云和夜泊酒店" target="_blank" class="nav-btn">📍 导航去酒店</a></div></div>
+                    <div class="item"><span class="time">17:30</span><div class="content"><strong>比斯特购物村 & 佛罗伦萨小镇</strong> <span class="star">★</span>
+                        <div class="img-box">
+                            <svg viewBox="0 0 100 50"><path d="M10,40 L90,40 L90,25 L10,25 Z" fill="#E8A35E"/><path d="M15,25 L20,10 L30,10 L35,25 Z" fill="#D18E4A"/><path d="M40,25 L45,5 L55,5 L60,25 Z" fill="#D18E4A"/><rect x="25" y="30" width="10" height="10" fill="#FFF9EE"/><rect x="45" y="30" width="10" height="10" fill="#FFF9EE"/></svg>
+                            <span>插图位（可替换为实拍图）</span>
+                        </div>
+                        <div class="rec">
+                            <div class="rec-title">🍽️ 附近逛吃推荐</div>
+                            <div>正餐：耶里夏丽 <a href="https://uri.amap.com/marker?position=121.686,31.148&name=耶里夏丽" target="_blank">📍 导航</a></div>
+                            <div>甜品：Venchi 冰淇淋 <a href="https://uri.amap.com/marker?position=121.686,31.148&name=Venchi" target="_blank">📍 导航</a></div>
+                        </div>
+                    </div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="day-card">
+            <div class="day-head" onclick="toggleMap('map-d2')"><h3>D2 浦东打卡，看演唱会</h3><span class="date">10/30 周五</span></div>
+            <div class="map" id="map-d2" style="display:none; border-radius:0; margin-bottom:0;"></div>
+            <div class="day-body">
+                <div class="timeline">
+                    <div class="item"><span class="time">10:00</span><div class="content"><strong>EKA·天物</strong> <span class="star">★</span>
+                        <div class="img-box">
+                            <svg viewBox="0 0 100 50"><rect x="20" y="15" width="60" height="30" fill="#D18E4A"/><polygon points="20,15 50,5 80,15" fill="#E8A35E"/><rect x="30" y="25" width="10" height="20" fill="#FFF9EE"/><rect x="60" y="25" width="10" height="20" fill="#FFF9EE"/></svg>
+                            <span>插图位（红砖厂房）</span>
+                        </div>
+                        <div class="rec"><div class="rec-title">☕ 简餐推荐</div><div>一尺花园 <a href="https://uri.amap.com/marker?position=121.616,31.253&name=一尺花园" target="_blank">📍 导航</a></div></div>
+                    </div></div>
+                    <div class="item"><span class="time">12:30</span><div class="content"><strong>新嘉中心</strong>
+                        <div class="rec"><div class="rec-title">🍽️ 商场内推荐</div><div>大董/鼎泰丰 <a href="https://uri.amap.com/marker?position=121.563,31.220&name=新嘉中心" target="_blank">📍 导航</a></div><div>Luneurs 冰淇淋 <a href="https://uri.amap.com/marker?position=121.563,31.220&name=Luneurs" target="_blank">📍 导航</a></div></div>
+                    </div></div>
+                    <div class="item"><span class="time">16:30</span><div class="content">跨江前往前滩 <a href="https://uri.amap.com/marker?position=121.488,31.161&name=前滩体育公园" target="_blank" class="nav-btn">📍 导航去场馆</a></div></div>
+                    <div class="item"><span class="time">18:30</span><div class="content"><strong>放肆快乐Live演唱会</strong> <span class="tag">实名制</span></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="day-card">
+            <div class="day-head" onclick="toggleMap('map-d3')"><h3>D3 梧桐区Citywalk，入住外滩</h3><span class="date">10/31 周六</span></div>
+            <div class="map" id="map-d3" style="display:none; border-radius:0; margin-bottom:0;"></div>
+            <div class="day-body">
+                <div class="timeline">
+                    <div class="item"><span class="time">09:30</span><div class="content">退房，打车去外滩酒店寄存行李</div></div>
+                    <div class="item"><span class="time">11:00</span><div class="content"><strong>武康大楼 & 武康路</strong> <span class="star">★</span>
+                        <div class="img-box">
+                            <svg viewBox="0 0 100 50"><path d="M35,45 L35,15 L50,5 L65,15 L65,45 Z" fill="#D18E4A"/><rect x="40" y="20" width="5" height="10" fill="#FFF9EE"/><rect x="55" y="20" width="5" height="10" fill="#FFF9EE"/><circle cx="20" cy="35" r="10" fill="#E8A35E"/><circle cx="80" cy="35" r="10" fill="#E8A35E"/></svg>
+                            <span>插图位（武康大楼）</span>
+                        </div>
+                        <div class="rec"><div class="rec-title">☕ 咖啡推荐</div><div>%Arabica <a href="https://uri.amap.com/marker?position=121.438,31.206&name=Arabica" target="_blank">📍 导航</a></div></div>
+                    </div></div>
+                    <div class="item"><span class="time">12:30</span><div class="content">吃蟹黄面（蟹家大院 / 人和馆）</div></div>
+                    <div class="item"><span class="time">14:30</span><div class="content"><strong>星巴克烘焙工坊</strong>
+                        <div class="rec"><div class="rec-title">☕ 体验推荐</div><div>Princi 烘焙区 / 气致冷萃 <a href="https://uri.amap.com/marker?position=121.455,31.225&name=星巴克烘焙工坊" target="_blank">📍 导航</a></div></div>
+                    </div></div>
+                    <div class="item"><span class="time">16:00</span><div class="content"><strong>静安寺</strong>（可去可不去）</div></div>
+                    <div class="item"><span class="time">17:00</span><div class="content">返回外滩酒店 Check-in，看夜景</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="day-card">
+            <div class="day-head" onclick="toggleMap('map-d4')"><h3>D4 虹桥新天地，满载返程</h3><span class="date">11/1 周日</span></div>
+            <div class="map" id="map-d4" style="display:none; border-radius:0; margin-bottom:0;"></div>
+            <div class="day-body">
+                <div class="timeline">
+                    <div class="item"><span class="time">10:00</span><div class="content">外滩周边闲逛（豫园/南京路）</div></div>
+                    <div class="item"><span class="time">12:00</span><div class="content">退房，带行李去 <strong>虹桥新天地</strong>
+                        <div class="img-box">
+                            <svg viewBox="0 0 100 50"><rect x="10" y="20" width="80" height="25" fill="#D18E4A"/><rect x="15" y="25" width="15" height="15" fill="#FFF9EE"/><rect x="35" y="25" width="15" height="15" fill="#FFF9EE"/><rect x="55" y="25" width="15" height="15" fill="#FFF9EE"/><circle cx="50" cy="15" r="8" fill="#E8A35E"/></svg>
+                            <span>插图位（虹桥新天地）</span>
+                        </div>
+                        <div class="rec"><div class="rec-title">🛍️ 逛吃推荐</div><div>年轻人Bistro/网红咖啡店，买伴手礼方便。</div></div>
+                    </div></div>
+                    <div class="item"><span class="time">17:30</span><div class="content">前往虹桥机场 T2 <a href="https://uri.amap.com/marker?position=121.326,31.197&name=虹桥机场T2" target="_blank" class="nav-btn">📍 导航去机场</a></div></div>
+                    <div class="item"><span class="time">20:30</span><div class="content">航班 MU5357 起飞回深圳</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sec-title">待办清单</div>
+        <div class="card">
+            <ul class="todo">
+                <li>演唱会大麦实名绑定身份证</li>
+                <li>10月28日前可免费取消云和夜泊酒店</li>
+                <li>准备高德地图 App 用于唤起导航</li>
+            </ul>
+        </div>
+
+        <div class="sec-title">实用贴士</div>
+        <div class="card tips">
+            <p><strong>交通：</strong>2人出行建议用支付宝/微信乘车码刷地铁。</p>
+            <p><strong>天气：</strong>10月底早晚温差大，建议带薄外套。</p>
+            <p><strong>避坑：</strong>外滩遇到搭讪推荐喝茶的不要理，全是骗局。</p>
+        </div>
+    </div>
+
+    <script>
+        // 倒计时
+        const target = new Date('2026-10-29T13:05:00+08:00').getTime();
+        setInterval(() => {
+            const now = new Date().getTime();
+            const d = target - now;
+            if (d < 0) { document.getElementById("timer").innerHTML = "旅程进行中！"; return; }
+            const days = Math.floor(d / 86400000);
+            const hours = Math.floor((d % 86400000) / 3600000);
+            const mins = Math.floor((d % 3600000) / 60000);
+            const secs = Math.floor((d % 60000) / 1000);
+            document.getElementById("timer").innerHTML = `${days}天 ${hours}时 ${mins}分 ${secs}秒`;
+        }, 1000);
+
+        // 地图
+        let maps = {};
+        function initMap(id, markers, center, zoom) {
+            if (maps[id]) return;
+            const m = new AMap.Map(id, { zoom, center, viewMode: '2D' });
+            markers.forEach(mk => {
+                const marker = new AMap.Marker({ position: mk.pos, title: mk.name, map: m });
+                marker.on('click', () => {
+                    new AMap.InfoWindow({
+                        content: `<div style="padding:5px;"><b>${mk.name}</b><br><a href="https://uri.amap.com/marker?position=${mk.pos}&name=${mk.name}" target="_blank" style="color:#E8A35E;">导航去这里</a></div>`,
+                        offset: new AMap.Pixel(0, -30)
+                    }).open(m, mk.pos);
+                });
+            });
+            maps[id] = m;
+        }
+
+        function toggleMap(id) {
+            const el = document.getElementById(id);
+            if (el.style.display === 'none') {
+                el.style.display = 'block';
+                setTimeout(() => {
+                    if (id === 'map-d1') initMap(id, [{pos:[121.808,31.144],name:'浦东机场'},{pos:[121.736,31.176],name:'云和夜泊酒店'},{pos:[121.686,31.148],name:'比斯特'}], [121.750,31.160], 11);
+                    if (id === 'map-d2') initMap(id, [{pos:[121.616,31.253],name:'EKA'},{pos:[121.563,31.220],name:'新嘉中心'},{pos:[121.488,31.161],name:'前滩'}], [121.550,31.210], 11);
+                    if (id === 'map-d3') initMap(id, [{pos:[121.438,31.206],name:'武康大楼'},{pos:[121.455,31.225],name:'星巴克'},{pos:[121.485,31.228],name:'外滩酒店'}], [121.460,31.220], 12);
+                    if (id === 'map-d4') initMap(id, [{pos:[121.485,31.228],name:'外滩酒店'},{pos:[121.319,31.194],name:'虹桥新天地'},{pos:[121.326,31.197],name:'虹桥机场'}], [121.400,31.210], 11);
+                }, 50);
+            } else { el.style.display = 'none'; }
+        }
+
+        window.onload = () => {
+            const m = new AMap.Map('overviewMap', { zoom: 11, center: [121.500, 31.200], viewMode: '2D' });
+            [
+                { pos: [121.808, 31.144], name: '浦东机场' },
+                { pos: [121.736, 31.176], name: '云和夜泊' },
+                { pos: [121.686, 31.148], name: '比斯特' },
+                { pos: [121.616, 31.253], name: 'EKA' },
+                { pos: [121.488, 31.161], name: '前滩' },
+                { pos: [121.438, 31.206], name: '武康大楼' },
+                { pos: [121.485, 31.228], name: '外滩' },
+                { pos: [121.326, 31.197], name: '虹桥机场' }
+            ].forEach(loc => new AMap.Marker({ position: loc.pos, title: loc.name, map: m }));
+        };
+    </script>
+</body>
+</html>
